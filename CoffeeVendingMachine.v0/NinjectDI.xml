@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module name="NinjectDI">
+  <bind service="CoffeeVendingMachine.v0.Model.IManAndMachineRepository, CoffeeVendingMachine.v0.Model"
+        to="CoffeeVendingMachine.v0.DataStorage.ManAndMachineRepository, CoffeeVendingMachine.v0.DataStorage" />
+  <bind service="CoffeeVendingMachine.v0.Model.IManAndMachineStateStrategy, CoffeeVendingMachine.v0.Model"
+        to="CoffeeVendingMachine.v0.Model.ManAndMachineStateStrategy, CoffeeVendingMachine.v0.Model" />
+  <bind service="CoffeeVendingMachine.v0.Model.ICoinSelectionStrategy, CoffeeVendingMachine.v0.Model"
+        to="CoffeeVendingMachine.v0.Model.CoinSelectionStrategy, CoffeeVendingMachine.v0.Model" />
+</module>

@@ -1,0 +1,169 @@
+﻿@using CoffeeVendingMachine.v0.Model
+@model ManAndMachine
+    
+@{
+    Layout = null;
+}
+
+@{
+    ViewBag.Title = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/MStyles.css")    
+    <title>Кофе и другие напитки</title>
+</head>
+<body>    
+    <input type="hidden" value=@ViewBag.Serialized id="serializedModel" />
+    <div class="top">
+        <table class="m-header">
+            <tr>
+                <td class="m-header-td1">
+                    <p style="vertical-align:middle; display:table-cell; white-space:nowrap;">Кофе и прочие напитки</p>
+                </td>                
+                <td class="m-header-td2">
+                    <a class="btn btn-default btn-reset" href="javascript:postform('/Home/Reset', 0)">все вернуть на место</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <table class="machine-table">
+            <tr>
+                <td class="purse-header-td border-td">
+                    <p class="hl0a no-margin">Ништячковый автомат</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="reciept-td border-td">
+                    <p class="reciept-header-p hl-reciept">@String.Format("Принято {0} р.", Model.Reciept)</p>
+                    <a class="btn btn-default btn-revert" href="javascript:postform('/Home/RevertMoney', 0)">Вернуть</a>
+                </td>
+            </tr>
+            <tr>
+                <td class="purse-header-td border-td">
+                    <p class="hl1a no-margin">В продаже</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="border-td">
+                    <table class="goods-main-table">
+                        @for (int i = 0; i < Model.Goods.Length; i++)
+                        {
+                            <tr>
+                                @if (Model.Goods[i].Count > 0)
+                                {
+                                    <td>
+                                        <a href=@(String.Format("javascript:postform('/Home/Sell',{0})", i)) class="goods-image-href1">
+                                            <table class="goods-tile-table">
+                                                <tr>
+                                                    <td class="auto-width-td">
+                                                        <img src=@Url.Content(String.Format("~/Content/goods_{0}.png", Model.Goods[i].Key)) class="goods-image-img1" />
+                                                    </td>
+                                                    <td>
+                                                        <p class="goods-p goods-p-m">@Model.Goods[i].Goods</p>
+                                                    </td>
+                                                    <td class="auto-width-td">
+                                                        <p class="goods-p no-margin-p">@(String.Format("{0} р.", Model.Goods[i].Price))</p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </a>
+                                    </td>
+                                    <td class="goods-main-table-sep-td" />
+                                    <td class="no-wrap">
+                                        <p class="no-margin-p goods-count-p">@String.Format("{0} шт.", Model.Goods[i].Count)</p>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="no-goods-td">
+                                        <table class="no-goods-table">
+                                            <tr>
+                                                <td class="auto-width-td">
+                                                    <img src=@Url.Content(String.Format("~/Content/goods_no_{0}.png", Model.Goods[i].Key)) class="goods-image-img1" />
+                                                </td>
+                                                <td>
+                                                    <p class="goods-p goods-p-m">@Model.Goods[i].Goods</p>
+                                                </td>
+                                                <td class="auto-width-td">
+                                                    <p class="goods-p no-margin-p">[нет в наличии]</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td class="goods-main-table-sep-td" />
+                                    <td />
+                                }
+                            </tr>
+                        }
+                    </table>
+                </td>
+            <tr>
+                <td class="purse-header-td border-td">
+                    <p class="cashin-header-cashin-p hl1a">Всего</p>
+                    <p class="cashin-header-amount-p hl1a">@(String.Format("{0} р.", Model.AmountInCashIn))</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="border-td">
+                    <table class="cashin-table">
+                        @for (int i = 0; i < Model.CashIn.Length; i++)
+                        {
+                            if (Model.CashIn[i].Count > 0)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src=@Url.Content(String.Format("~/Content/rur{0}.png", Model.CashIn[i].Nominal)) class="money-image-img2" />
+                                    </td>
+                                    <td>
+                                        <p class="cashin-count">@String.Format("{0} шт.", Model.CashIn[i].Count)</p>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <table class="purse-table">
+            <tr>
+                <td colspan="3" class="purse-header-td">
+                    <p class="purse-header-purse-p hl0a">Кошелек</p>
+                    <p class="purse-header-amount-p hl0a">@(String.Format("{0} р.", Model.AmountInPurse))</p>
+                </td>
+            </tr>
+
+            @for (int i = 0; i < Model.Purse.Length; i++)
+            {
+                if (Model.Purse[i].Count > 0)
+                {
+                    <tr>
+                        <td>
+                            <a href=@(String.Format("javascript:postform('/Home/PushMoney',{0})", i)) class="money-image-href1">
+                                <img src=@Url.Content(String.Format("~/Content/rur{0}.png", Model.Purse[i].Nominal)) class="money-image-img1" />
+                            </a>
+                        </td>
+                        <td><p class="purse-count">@String.Format("{0} шт.", Model.Purse[i].Count)</p></td>
+                        <td class="auto-width-td"><a class="btn btn-default btn-custom" href=@(String.Format("javascript:postform('/Home/PushMoney',{0})", i))>Внести</a></td>
+                    </tr>
+                }
+            }
+
+        </table>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/postform.js"></script>
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <script type="text/javascript">
+        $(document).ready(function () {
+            alert('@ViewBag.Message')
+        });
+        </script>
+    }    
+</body>
+</html>
